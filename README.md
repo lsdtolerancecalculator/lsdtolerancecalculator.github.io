@@ -1,4 +1,9 @@
 # lsdtolerancecalculator.github.io
+
+Harm Reduction focused project.
+
 ##LSD Tolerance Calculator
 
-This calculator was made as an excercise, based on the code used in tolerancecalculator.paperplane.io/
+The calculator was made as an excercise, based on the code used in tolerancecalculator.paperplane.io/
+
+
