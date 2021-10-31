@@ -26,7 +26,9 @@
 <div align="center">
   <a href="https://lsdtolerancecalculator.github.io">
     <img src="images/screenshot.PNG" alt="Screenshot">
-  </a>)
+  </a>
+  
+  Harm Reduction Focused project, Starting as a Simple Calculator for LSD Dosages but expanding to add more useful and educative content.
 
 
 
@@ -50,10 +52,10 @@
 <!-- ROADMAP -->
 ## Roadmap
 
- [] Feature 1
- [] Feature 2
- [] Feature 3
- [] Nested Feature
+- [] DXM Calculator
+- [] Psychedelics Frequently Asked Questions
+- [] Spanish, German, Russian & French Versions of the website.
+- [] Safety and Harm Reduction Blog and tips.
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
