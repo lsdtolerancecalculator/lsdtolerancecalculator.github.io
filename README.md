@@ -194,9 +194,9 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
+Jose Ferri - [@LinkedIn](https://www.linkedin.com/in/jose-ferri/) - joe@ferri.works
 
-Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
+Project Link: [https://github.com/lsdtolerancecalculator/lsdtolerancecalculator.github.io](https://github.com/lsdtolerancecalculator/lsdtolerancecalculator.github.io)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
