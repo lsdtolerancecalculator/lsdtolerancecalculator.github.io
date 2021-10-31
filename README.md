@@ -11,16 +11,8 @@
 <h3 align="center">LSD Tolerance Calculator</h3>
 
   <p align="center">
-    Harm reduction Project
+    Harm reduction Project. Easy to use LSD Calculator based on a 12 days tolerance reset, this is to be taken as a grain of salt as everybody's different.
     <br />
-    <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/github_username/repo_name">View Demo</a>
-    ·
-    <a href="https://github.com/github_username/repo_name/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/github_username/repo_name/issues">Request Feature</a>
   </p>
 </div>
 
