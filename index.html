@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="mexC8OEqcxMedPJAxbSKNLKp4OfR1YpYdSZGNWzdbxY" />
+  <link rel="apple-touch-icon" sizes="57x57" href="/media/favicon/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/media/favicon/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/media/favicon/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/media/favicon/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/media/favicon/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/media/favicon/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/media/favicon/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/media/favicon/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/media/favicon/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/media/favicon/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/media/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/media/favicon/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/media/favicon/favicon-16x16.png">
+  <link rel="manifest" href="/media/favicon/manifest.json">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/media/favicon/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+  <title>LSD Tolerance Calculator</title>
+  <meta name="description" content="Psychedelic Harm Reduction focused tool. ">
+  <meta name="keywords" content="LSD tolerance Calculator, How to Test LSD, LSD Calculator">
+  <meta name="robots" content="index, follow">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="language" content="English">
+  <meta name="author" content="Jose Ferri">
+</head>
+
+<body>
+
+  <!--NAV BAR START-->
+
+  <header>
+    <div class="px-3 py-2 bg-dark text-white">
+      <div class="container">
+        <div class="d-flex flex-wrap align-middle align-items-center justify-content-center justify-content-lg-start">
+          <a href="https://lsdtolerancecalculator.github.io" class=" align-items-center  my-lg-0 me-lg-auto ">
+
+            <img class=" a d-block mx-auto " src="/media/logonobg.png" alt="" width="50">
+
+          </a>
+
+          <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
+            <li>
+              <a href="https://lsdtolerancecalculator.github.io" class="text-center nav-link text-secondary">
+
+                <i class="pt-2 bi d-block mx-auto  fas fa-calculator" width="24" height="24"></i>
+                LSD Tolerance Calculator
+              </a>
+            </li>
+            <li>
+              <a href="https://lsdtolerancecalculator.github.io/how-to-test-lsd.html" class="text-center nav-link text-white">
+
+                <i class="pt-2 bi d-block mx-auto  fas fa-flask" width="24" height="24"></i>
+                How To Test LSD
+              </a>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </header>
+
+  <!--NAV BAR ENDS-->
+  <!--BODY-->
+  <div class="px-4 py-5 my-5 text-center">
+    <img class="d-block mx-auto mb-4" src="/media/logo.png" alt="" width="72">
+    <h1 class="display-5 fw-bold">LSD Tolerance Calculator</h1>
+    <div class="col-lg-6 mx-auto">
+
+    </div>
+  </div>
+  <main>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <label class="text-muted">Last Dose</label>
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" id="lastdose" placeholder="Example: 150" required=""
+              style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABHklEQVQ4EaVTO26DQBD1ohQWaS2lg9JybZ+AK7hNwx2oIoVf4UPQ0Lj1FdKktevIpel8AKNUkDcWMxpgSaIEaTVv3sx7uztiTdu2s/98DywOw3Dued4Who/M2aIx5lZV1aEsy0+qiwHELyi+Ytl0PQ69SxAxkWIA4RMRTdNsKE59juMcuZd6xIAFeZ6fGCdJ8kY4y7KAuTRNGd7jyEBXsdOPE3a0QGPsniOnnYMO67LgSQN9T41F2QGrQRRFCwyzoIF2qyBuKKbcOgPXdVeY9rMWgNsjf9ccYesJhk3f5dYT1HX9gR0LLQR30TnjkUEcx2uIuS4RnI+aj6sJR0AM8AaumPaM/rRehyWhXqbFAA9kh3/8/NvHxAYGAsZ/il8IalkCLBfNVAAAAABJRU5ErkJggg==&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%;">
+            <div class="input-group-append">
+              <span class="bg-dark text-white input-group-text">μg</span>
+            </div>
+          </div>
+
+        </div>
+        <div class="col-sm-6">
+
+          <label class="text-muted">Desired Dose</label>
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" id="desiredose" placeholder="Example: 200" required="">
+            <div class="input-group-append">
+              <span class="bg-dark text-white input-group-text">μg</span>
+            </div>
+
+          </div>
+
+        </div>
+        <div class="row">
+
+          <div class="col-sm-6">
+            <label class="text-muted">Days since you Last Dosed</label>
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" id="daysince" placeholder="1-12" required="">
+              <div class="input-group-append">
+                <span class="bg-dark text-white input-group-text">days</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 my-auto mx-auto">
+            <button type="button" class="w-100 btn btn-primary btn-lg " onclick="createcalc()">Calculate</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <p class="lead ">Results:</p>
+      <div class="row border-bottom">
+        <div class="col-sm-6" id="testing">
+
+        </div>
+        <div class="col-sm-6  " id="testing2">
+
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="px-4 py-5 my-5 text-center">
+      <img class="d-block mx-auto mb-4" src="/media/logo.png" alt="" width="72">
+      <h2 class="display-5 fw-bold">How does the Calculator Work?</h2>
+      <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">
+          This Calculator only works for LSD or other <a
+            href="https://psychonautwiki.org/wiki/Lysergamides">Lysergamides</a>.
+
+        </p>
+        <p class=" mb-4">
+          This calculator only provides an estimate based on a 12-day tolerance reset cycle. It is worth noting that
+          everybody's physiology is different, so take this calculator as a grain of salt.
+        </p>
+        <p class=" mb-4">
+          This calculator assumes that you know the exact dose of LSD you are taking, a "regular dose" of LSD is around
+          100μg(100 micrograms) but it
+          is almost impossible to know the exact dosage in a blotter without a lab analysis.
+        </p>
+        <p class=" mb-4">
+          For the best experience, it is recommended to wait at least 2 weeks as a minimum for full tolerance reset and
+          1 month to
+          fully integrate the experience and keep some novelty feeling in the experience.
+        </p>
+      </div>
+    </div>
+    <div class="container px-4 py-5 my-5 text-center">
+      <div class="row">
+        <div class="col-sm-6">
+          <h2 class=" mb-4">Is your LSD Real?</h2>
+          <p class=" mb-2">
+            Reagent testing kits are the only way users can screen for adulterants in their drugs. They are the first
+            step in practicing proper harm reduction!
+          </p>
+          <p class=" mb-2">
+            Drug testing or adulterant screening will let you know if you are taking unknown or unwanted drugs like
+            NBOme, which can <a
+              href="https://www.nola.com/news/crime_police/article_526a4b28-8e79-5b4c-8310-637c946b616c.html">cause
+              death</a> even in normal doses.
+          </p>
+          <a class="w-100 btn btn-primary" href="https://lsdtolerancecalculator.github.io/how-to-test-lsd.html" role="button"><i
+            class="pt-2 bi d-block mx-auto  fas fa-flask"></i>How to Test LSD</a>
+      
+        </div>
+        <div class="col-sm-6">
+          <h2>What is a good First Time Dosage?</h2>
+          <p class=" mb-2">
+            Opinions on the matter of dosage for your first trip may vary depending on how you ask. However, <a
+              href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3308357/">research</a>
+            has shown that starting with small doses and increasing over time with subsequent sessions generally
+            produced greater persisting positive effects.
+          </p>
+          <p class=" mb-2">
+            Consider starting with no more than 1-1.5 grams of dried cubensis, or 80-100μg (80-100 micrograms) of LSD.
+            However, bear in mind
+            that mushrooms can naturally significantly vary in potency, and tabs of LSD are often inaccurately dosed.
+          </p>
+          <p class=" mb-2">
+            It's always better to be safe than sorry, so dose conservatively - there is always next time to go deeper.
+            Also, re-assessing dosage and starting low when using drugs from a new source is highly recommended,
+            regardless of prior experience.
+          </p>
+
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!--FOOTER-->
+
+  <div class="container">
+    <footer class="py-3 my-4">
+      <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+        <li class="nav-item"><a href="https://lsdtolerancecalculator.github.io" class="nav-link px-2 text-muted">LSD
+            Tolerance Calculator</a></li>
+        <li class="nav-item"><a href="https://lsdtolerancecalculator.github.io/how-to-test-lsd.html" class="nav-link px-2 text-muted">How to Test LSD</a></li>
+
+      </ul>
+      <ul class="nav justify-content-center  pb-3 mb-3">
+        <li class="ms-3"><a class="text-muted" href="https://twitter.com/LSDTolCalc">
+            <i class="bi fab fa-twitter"></i></a>
+        </li>
+        <li class="ms-3"><a class="text-muted" href="https://www.instagram.com/lsdtolerancecalculator/"><i
+              class="bi fab fa-instagram"></i></a></li>
+
+
+      </ul>
+      <ul class="nav justify-content-center pb-3 mb-3">
+        <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
+          <svg class="bi" width="30" height="24">
+            <use xlink:href="#bootstrap"></use>
+          </svg>
+        </a>
+        <span class="text-muted">© 2021 <a href="http://ferri.works">Ferri Works</a> | Harm Reduction Focused
+          Project</span>
+      </ul>
+    </footer>
+  </div>
+
+  <!--FOOTER END-->
+
+  <!--JS STARTS HERE-->
+  <script src="/assets/cal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-G7SYDF3QW8"></script>
+   
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'G-G7SYDF3QW8');
+  </script>
+</body>
+
+</html>
