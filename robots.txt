@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /assets/
+Sitemap: https://lsdtolerancecalculator.github.io/sitemap.xml
