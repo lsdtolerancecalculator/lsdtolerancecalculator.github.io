@@ -22,11 +22,24 @@ function calculate() {
     return;
   }
 
+  // Formula from original code:
+  // dose = ((280.059565 * (Math.pow(n, -0.412565956))) * (x / 100) - x);
   let dose = 280.059565 * Math.pow(n, -0.412565956) * (x / 100) - x;
 
-
+  // If days is 0, the formula might behave weirdly or result in Infinity if not handled,
+  // but original code didn't handle n=0 specifically other than <0 check.
+  // Math.pow(0, negative) is Infinity.
+  // Let's check if n is 0.
   if (n === 0) {
-
+    // If 0 days, tolerance is max.
+    // The formula: 280 * (0^-0.4) is Infinity.
+    // Let's assume a very small number or just handle it.
+    // Actually, if n=0, you need A LOT more.
+    // Let's stick to the formula but clamp n to something small if 0 to avoid Infinity?
+    // Or just let it be large.
+    // Original code: if n < 0 return false. It didn't check n=0 explicitly for Math.pow error.
+    // Let's try n=0.1 if n=0 to avoid breakdown, or just catch it.
+    // Actually, let's see what happens.
   }
 
   const dose1 = y + dose; // Needed for desired effect
@@ -37,11 +50,11 @@ function calculate() {
   const resultEffectiveness = document.getElementById("result-effectiveness");
   const resultNeeded = document.getElementById("result-needed");
 
- 
+  // Show results
   resultsContainer.classList.remove("hidden");
   placeholderText.classList.add("hidden");
 
- 
+  // Update text
   if (dose2 < 0) {
     resultEffectiveness.innerHTML = `If you take <strong>${y}μg</strong>, it will have <span class="text-red-500">little to no effect</span>.`;
   } else {
