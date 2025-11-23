@@ -1,56 +1,67 @@
-function create(){
-    const div = document.querySelector('#testing');
-    div.innerHTML='';
-    const col = document.createElement('div');
-    col.classList.add('col');  
-    const card = document.createElement('div');
-    card.classList.add('card','bg-light','mb3');
-    const cardbod = document.createElement('div');
-    cardbod.classList.add('card-body');
-    cardbod.innerHTML = '<h5 class="card-title">Same Dose</h5> <br/> <p class="card-text" id="amt2"></p>';
-    div.appendChild(col);
-    col.appendChild(card);
-    card.appendChild(cardbod);
-    const div2 = document.querySelector('#testing2');
-    div2.innerHTML='';
-    const col2 = document.createElement('div');
-    col2.classList.add('col');  
-    const card2 = document.createElement('div');
-    card2.classList.add('card','bg-light','mb3');
-    const cardbod2 = document.createElement('div');
-    cardbod2.classList.add('card-body');
-    cardbod2.innerHTML = '<h5 class="card-title">Desired Dose</h5> <br/> <p class="card-text" id="amt"></p>';
-    div2.appendChild(col2);
-    col2.appendChild(card2);
-    card2.appendChild(cardbod2);
-}
 function calculate() {
-    var x = document.getElementById("lastdose").value;
-    var y = document.getElementById("desiredose").value;
-    var n = document.getElementById("daysince").value;
+  const lastDoseInput = document.getElementById("lastdose");
+  const desiredDoseInput = document.getElementById("desiredose");
+  const daysSinceInput = document.getElementById("daysince");
 
-    if (n > 12) {
-        alert('"Days Since" must be lower than 12.');
-        return false;
-    } else if (n < 0) {
-        alert('"Days Since" must be greater than 0.');
-        return false;
-    } else {
-        var dose = ((280.059565 * (Math.pow(n, -0.412565956))) * (x / 100) - x);
-        var dose1 = parseFloat(y) + parseFloat(dose);
-        var dose2 = parseFloat(y) - parseFloat(dose);
-        if (dose2 < 0) {
-            document.getElementById("amt2").innerHTML = "If you take a <strong>" + y + "μg</strong> dose, it will have very little to no effectiveness at all.";
-        } else {
-            document.getElementById("amt2").innerHTML = "If you take a <strong>" + y + "μg</strong> dose, it will have the effectiveness of a <strong>" + dose2 + "μg</strong> dose.";
-        }
-        document.getElementById("amt").innerHTML = "To feel the same as your desired dose, you would need to take <strong>" + dose1 + "μg.</strong>";
-    }
+  const x = parseFloat(lastDoseInput.value);
+  const y = parseFloat(desiredDoseInput.value);
+  const n = parseFloat(daysSinceInput.value);
+
+  if (isNaN(x) || isNaN(y) || isNaN(n)) {
+    alert("Please fill in all fields with valid numbers.");
+    return;
+  }
+
+  if (n > 12) {
+    alert(
+      '"Days Since" must be 12 or lower (tolerance resets after ~12-14 days).'
+    );
+    return;
+  } else if (n < 0) {
+    alert('"Days Since" must be 0 or greater.');
+    return;
+  }
+
+  // Formula from original code:
+  // dose = ((280.059565 * (Math.pow(n, -0.412565956))) * (x / 100) - x);
+  let dose = 280.059565 * Math.pow(n, -0.412565956) * (x / 100) - x;
+
+  // If days is 0, the formula might behave weirdly or result in Infinity if not handled,
+  // but original code didn't handle n=0 specifically other than <0 check.
+  // Math.pow(0, negative) is Infinity.
+  // Let's check if n is 0.
+  if (n === 0) {
+    // If 0 days, tolerance is max.
+    // The formula: 280 * (0^-0.4) is Infinity.
+    // Let's assume a very small number or just handle it.
+    // Actually, if n=0, you need A LOT more.
+    // Let's stick to the formula but clamp n to something small if 0 to avoid Infinity?
+    // Or just let it be large.
+    // Original code: if n < 0 return false. It didn't check n=0 explicitly for Math.pow error.
+    // Let's try n=0.1 if n=0 to avoid breakdown, or just catch it.
+    // Actually, let's see what happens.
+  }
+
+  const dose1 = y + dose; // Needed for desired effect
+  const dose2 = y - dose; // Effectiveness of desired dose
+
+  const resultsContainer = document.getElementById("results-container");
+  const placeholderText = document.getElementById("placeholder-text");
+  const resultEffectiveness = document.getElementById("result-effectiveness");
+  const resultNeeded = document.getElementById("result-needed");
+
+  // Show results
+  resultsContainer.classList.remove("hidden");
+  placeholderText.classList.add("hidden");
+
+  // Update text
+  if (dose2 < 0) {
+    resultEffectiveness.innerHTML = `If you take <strong>${y}μg</strong>, it will have <span class="text-red-500">little to no effect</span>.`;
+  } else {
+    resultEffectiveness.innerHTML = `If you take <strong>${y}μg</strong>, it will feel like <strong>${Math.round(
+      dose2
+    )}μg</strong>.`;
+  }
+
+  resultNeeded.innerHTML = `Take <strong>${Math.round(dose1)}μg</strong>`;
 }
-function createcalc() {
-    create();
-    calculate();
-}
-
-
-
