@@ -98,6 +98,35 @@
         }
         input[type=range]::-webkit-slider-thumb:active { transform: scale(1.2); }
 
+        /* Toggle Switch */
+        .toggle-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .toggle-switch {
+            position: relative;
+            width: 40px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .toggle-switch.active { background: rgba(0, 255, 0, 0.5); }
+        .toggle-knob {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background: #fff;
+            border-radius: 50%;
+            transition: transform 0.3s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        .toggle-switch.active .toggle-knob { transform: translateX(20px); }
+
     </style>
 </head>
 <body>
@@ -122,7 +151,7 @@
                 <label>Visual Style</label>
                 <span id="iter-val" class="value">1</span>
             </div>
-            <input type="range" id="iterations" min="1" max="4" step="1" value="1">
+            <input type="range" id="iterations" min="1" max="3" step="1" value="1">
         </div>
 
         <div class="control-group">
@@ -143,10 +172,28 @@
 
         <div class="control-group">
             <div class="label-row">
-                <label>Color Shift</label>
-                <span id="color-val" class="value">0.5</span>
+                <label>Light Intensity</label>
+                <span id="intensity-val" class="value">1.0</span>
             </div>
-            <input type="range" id="color" min="0" max="1" step="0.01" value="0.5">
+            <input type="range" id="intensity" min="0.2" max="2.0" step="0.01" value="1.0">
+        </div>
+
+        <div class="control-group">
+            <div class="toggle-container">
+                <label>Chromatic Aberration</label>
+                <div class="toggle-switch" id="aberration-toggle">
+                    <div class="toggle-knob"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div class="toggle-container">
+                <label>Negative Flash</label>
+                <div class="toggle-switch" id="negative-toggle">
+                    <div class="toggle-knob"></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -165,8 +212,10 @@
         uniform float uLevel;
         uniform float uSpeed;
         uniform float uSymmetry;
-        uniform float uColor;
+        uniform float uIntensity;
         uniform float uIterations; // 1-4 Style Selector
+        uniform float uNegative; // 0-1 Mix for negative flash
+        uniform float uAberration; // 0 or 1
 
         varying vec2 vUv;
 
@@ -182,8 +231,69 @@
             vec3 a = vec3(0.5, 0.5, 0.5);
             vec3 b = vec3(0.5, 0.5, 0.5);
             vec3 c = vec3(1.0, 1.0, 1.0);
-            vec3 d = vec3(0.263,0.416,0.557) + uColor;
+            vec3 d = vec3(0.263,0.416,0.557);
             return a + b*cos( 6.28318*(c*t+d) );
+        }
+
+        // Fractal Function
+        vec3 getFractal(vec2 uv, float level, float sym, float iterStyle) {
+            // Reset UV for fractal
+            vec2 uv0 = uv;
+            
+            // STYLE 3: WAVY DISTORTION
+            if (iterStyle >= 3.0) {
+                uv += sin(uv.yx * 4.0 + uTime * uSpeed) * 0.05;
+            }
+            
+            // Fractal Iterations based on Level
+            float iterations = 1.0 + (level - 2.0) * 0.8;
+            
+            vec3 fractalColor = vec3(0.0);
+            
+            for (float i = 0.0; i < 8.0; i++) {
+                if (i >= iterations) break;
+
+                // Polar Fold (Kaleidoscope)
+                float angle = atan(uv.y, uv.x);
+                float radius = length(uv);
+                
+                float slice = (2.0 * PI) / sym;
+                angle = mod(angle, slice);
+                angle = abs(angle - slice * 0.5);
+                
+                uv = vec2(cos(angle), sin(angle)) * radius;
+
+                // Space Fold
+                uv = abs(uv) - 0.5; // Offset
+                uv *= 1.2; // Scale
+                
+                // Rotate
+                float t = uTime * uSpeed * 0.2;
+                float s = sin(t + i*0.5);
+                float c = cos(t + i*0.5);
+                uv *= mat2(c, -s, s, c);
+
+                // Accumulate
+                float d = length(uv) * exp(-length(uv0));
+                vec3 col = palette(length(uv0) + i*.4 + uTime*.4 * uSpeed);
+                
+                // Standard Glow
+                float glow = sin(d*8. + uTime * uSpeed)/8.;
+                glow = abs(glow);
+                glow = pow(0.01 / glow, 1.2);
+                
+                // STYLE 2: LASER LINES
+                if (iterStyle >= 2.0) {
+                    float laser = 0.02 / abs(sin(d * 20.0 + uTime * uSpeed * 4.0));
+                    glow += laser * 0.5;
+                }
+                
+                // STYLE 4: OUTLINES (Ghostly Logic handled outside loop or via mix)
+                // Actually, let's keep outlines for style 4 but make them subtle
+                
+                fractalColor += col * glow;
+            }
+            return fractalColor;
         }
 
         void main() {
@@ -192,14 +302,16 @@
             
             // Center UVs -1 to 1, correct aspect ratio
             vec2 uv = (gl_FragCoord.xy * 2.0 - uResolution.xy) / uResolution.y;
-            vec2 uv0 = uv;
             
+            // (Peripheral distortion removed)
+
+            vec2 uv0 = uv;
             vec3 finalColor = vec3(0.0);
             
             // --- LEVEL 0-2: NOISE & PHOSPHENES ---
             if (level < 2.5) {
                 // Noise
-                float noise = random(uv + uTime * 0.1);
+                float noise = random(uv + uTime * uSpeed * 0.5);
                 
                 // Phosphenes (Blobs)
                 float phos = 0.0;
@@ -219,73 +331,34 @@
             
             // --- LEVEL 2+: FRACTAL GEOMETRY ---
             if (level > 1.5) {
-                // Reset UV
-                uv = uv0;
-                
-                // STYLE 3: WAVY DISTORTION
-                if (uIterations >= 3.0) {
-                    uv += sin(uv.yx * 4.0 + uTime * uSpeed) * 0.05;
-                }
-                
-                // Fractal Iterations based on Level
-                float iterations = 1.0 + (level - 2.0) * 0.8;
-                
-                // Symmetry
-                float sym = uSymmetry;
-                
                 vec3 fractalColor = vec3(0.0);
-                
-                for (float i = 0.0; i < 8.0; i++) {
-                    if (i >= iterations) break;
 
-                    // Polar Fold (Kaleidoscope)
-                    float angle = atan(uv.y, uv.x);
-                    float radius = length(uv);
+                // CHROMATIC ABERRATION
+                if (uAberration > 0.5) {
+                    float dist = length(uv0);
+                    float aberration = dist * 0.03; // Shift amount
                     
-                    float slice = (2.0 * PI) / sym;
-                    angle = mod(angle, slice);
-                    angle = abs(angle - slice * 0.5);
+                    vec3 colR = getFractal(uv0 + vec2(aberration, 0.0), level, uSymmetry, uIterations);
+                    vec3 colG = getFractal(uv0, level, uSymmetry, uIterations);
+                    vec3 colB = getFractal(uv0 - vec2(aberration, 0.0), level, uSymmetry, uIterations);
                     
-                    uv = vec2(cos(angle), sin(angle)) * radius;
-
-                    // Space Fold
-                    uv = abs(uv) - 0.5; // Offset
-                    uv *= 1.2; // Scale
-                    
-                    // Rotate
-                    float t = uTime * uSpeed * 0.2;
-                    float s = sin(t + i*0.5);
-                    float c = cos(t + i*0.5);
-                    uv *= mat2(c, -s, s, c);
-
-                    // Accumulate
-                    float d = length(uv) * exp(-length(uv0));
-                    vec3 col = palette(length(uv0) + i*.4 + uTime*.4 * uSpeed);
-                    
-                    // Standard Glow
-                    float glow = sin(d*8. + uTime * uSpeed)/8.;
-                    glow = abs(glow);
-                    glow = pow(0.01 / glow, 1.2);
-                    
-                    // STYLE 2: LASER LINES
-                    if (uIterations >= 2.0) {
-                        float laser = 0.02 / abs(sin(d * 20.0 + uTime * 2.0));
-                        glow += laser * 0.5;
-                    }
-                    
-                    // STYLE 4: OUTLINES
-                    if (uIterations >= 4.0) {
-                        float outline = smoothstep(0.4, 0.42, sin(d * 30.0));
-                        col += vec3(outline) * 2.0;
-                    }
-                    
-                    fractalColor += col * glow;
+                    fractalColor = vec3(colR.r, colG.g, colB.b);
+                } else {
+                    // Standard Rendering
+                    fractalColor = getFractal(uv0, level, uSymmetry, uIterations);
                 }
                 
                 // Mix Fractal in
                 float fractalMix = smoothstep(1.5, 2.5, level);
                 finalColor += fractalColor * fractalMix;
             }
+
+            // Apply Intensity
+            finalColor *= uIntensity;
+
+            // --- NEGATIVE FLASH ---
+            vec3 negativeColor = 1.0 - finalColor;
+            finalColor = mix(finalColor, negativeColor, uNegative);
 
             gl_FragColor = vec4(finalColor, 1.0);
         }
@@ -309,8 +382,10 @@
             uLevel: { value: 1.0 },
             uSpeed: { value: 0.5 },
             uSymmetry: { value: 6.0 },
-            uColor: { value: 0.5 },
-            uIterations: { value: 1.0 }
+            uIntensity: { value: 1.0 },
+            uIterations: { value: 1.0 },
+            uNegative: { value: 0.0 },
+            uAberration: { value: 0.0 }
         };
 
         // --- MESH ---
@@ -354,14 +429,53 @@
         bindControl('iterations', 'uIterations', 'iter-val');
         bindControl('speed', 'uSpeed', 'speed-val');
         bindControl('symmetry', 'uSymmetry', 'sym-val');
-        bindControl('color', 'uColor', 'color-val');
+        bindControl('intensity', 'uIntensity', 'intensity-val');
+
+        // Chromatic Aberration Toggle
+        const abToggle = document.getElementById('aberration-toggle');
+        abToggle.addEventListener('click', () => {
+            const isActive = abToggle.classList.toggle('active');
+            uniforms.uAberration.value = isActive ? 1.0 : 0.0;
+        });
+
+        // Negative Flash Toggle
+        let negativeFlashEnabled = false;
+        const negToggle = document.getElementById('negative-toggle');
+        negToggle.addEventListener('click', () => {
+            negativeFlashEnabled = !negativeFlashEnabled;
+            negToggle.classList.toggle('active');
+            if (!negativeFlashEnabled) {
+                uniforms.uNegative.value = 0.0; // Reset immediately if disabled
+            }
+        });
 
         // --- ANIMATION LOOP ---
         const clock = new THREE.Clock();
+        
+        // Negative Flash Logic
+        let negTarget = 0.0;
+        let nextFlashTime = 0;
 
         function animate() {
             requestAnimationFrame( animate );
-            uniforms.uTime.value = clock.getElapsedTime();
+            const time = clock.getElapsedTime();
+            uniforms.uTime.value = time;
+
+            if (negativeFlashEnabled) {
+                // Randomly trigger flash
+                if (time > nextFlashTime) {
+                    // Toggle target between 0 and 1
+                    negTarget = negTarget === 0.0 ? 1.0 : 0.0;
+                    // Set next random interval (3-10 seconds)
+                    nextFlashTime = time + 3.0 + Math.random() * 7.0; 
+                }
+                
+                // Fast Lerp
+                uniforms.uNegative.value += (negTarget - uniforms.uNegative.value) * 0.1;
+            } else {
+                uniforms.uNegative.value += (0.0 - uniforms.uNegative.value) * 0.1;
+            }
+
             renderer.render( scene, camera );
         }
         animate();
