@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fractal Triptoy | Interactive Psychedelic Visualizer & LSD Trip Toy</title>
+    <meta name="description" content="Explore mesmerizing 2D fractals and psychedelic geometry. The ultimate interactive triptoy for LSD, shrooms, and psychedelic experiences. Relax and visualize.">
+    <meta name="keywords" content="LSD, Triptoy, Psychedelics, Fractals, Visualizer, Geometry, Trip Toy, Interactive, WebGL">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body { margin: 0; overflow: hidden; background: #000; color: #fff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; user-select: none; -webkit-user-select: none; }
+        #canvas-container { width: 100vw; height: 100vh; display: block; }
+        
+        /* UI STYLING */
+        #ui-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        #ui-toggle:hover { background: rgba(255, 255, 255, 0.2); }
+        #ui-toggle svg { fill: #fff; width: 20px; height: 20px; }
+
+        #ui-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 320px;
+            background: rgba(10, 10, 10, 0.6);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #ui-panel.hidden {
+            transform: translate(-50%, 120%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .control-group { display: flex; flex-direction: column; gap: 8px; }
+        
+        .label-row { display: flex; justify-content: space-between; align-items: center; }
+        label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255, 255, 255, 0.6); font-weight: 600; }
+        .value { font-size: 12px; font-family: monospace; color: rgba(255, 255, 255, 0.9); }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            background: transparent;
+            cursor: pointer;
+        }
+        input[type=range]:focus { outline: none; }
+        
+        /* Slider Track */
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+        }
+        
+        /* Slider Thumb */
+        input[type=range]::-webkit-slider-thumb {
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -6px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            transition: transform 0.1s;
+        }
+        input[type=range]::-webkit-slider-thumb:active { transform: scale(1.2); }
+
+    </style>
+</head>
+<body>
+
+    <div id="canvas-container"></div>
+
+    <div id="ui-toggle">
+        <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+    </div>
+
+    <div id="ui-panel">
+        <div class="control-group">
+            <div class="label-row">
+                <label>Intensity Level</label>
+                <span id="level-val" class="value">1.0</span>
+            </div>
+            <input type="range" id="level" min="1" max="8" step="0.01" value="1.0">
+        </div>
+
+        <div class="control-group">
+            <div class="label-row">
+                <label>Visual Style</label>
+                <span id="iter-val" class="value">1</span>
+            </div>
+            <input type="range" id="iterations" min="1" max="4" step="1" value="1">
+        </div>
+
+        <div class="control-group">
+            <div class="label-row">
+                <label>Speed</label>
+                <span id="speed-val" class="value">0.5</span>
+            </div>
+            <input type="range" id="speed" min="0" max="2" step="0.01" value="0.5">
+        </div>
+
+        <div class="control-group">
+            <div class="label-row">
+                <label>Symmetry</label>
+                <span id="sym-val" class="value">6</span>
+            </div>
+            <input type="range" id="symmetry" min="2" max="24" step="1" value="6">
+        </div>
+
+        <div class="control-group">
+            <div class="label-row">
+                <label>Color Shift</label>
+                <span id="color-val" class="value">0.5</span>
+            </div>
+            <input type="range" id="color" min="0" max="1" step="0.01" value="0.5">
+        </div>
+    </div>
+
+    <!-- SHADER CODE -->
+    <script id="vertexShader" type="x-shader/x-vertex">
+        varying vec2 vUv;
+        void main() {
+            vUv = uv;
+            gl_Position = vec4( position, 1.0 );
+        }
+    </script>
+
+    <script id="fragmentShader" type="x-shader/x-fragment">
+        uniform float uTime;
+        uniform vec2 uResolution;
+        uniform float uLevel;
+        uniform float uSpeed;
+        uniform float uSymmetry;
+        uniform float uColor;
+        uniform float uIterations; // 1-4 Style Selector
+
+        varying vec2 vUv;
+
+        #define PI 3.14159265359
+
+        // Random Noise
+        float random(vec2 st) {
+            return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
+        }
+
+        // Palette
+        vec3 palette( float t ) {
+            vec3 a = vec3(0.5, 0.5, 0.5);
+            vec3 b = vec3(0.5, 0.5, 0.5);
+            vec3 c = vec3(1.0, 1.0, 1.0);
+            vec3 d = vec3(0.263,0.416,0.557) + uColor;
+            return a + b*cos( 6.28318*(c*t+d) );
+        }
+
+        void main() {
+            // Map 1-8 input to 0-8 internal logic
+            float level = (uLevel - 1.0) * (8.0 / 7.0);
+            
+            // Center UVs -1 to 1, correct aspect ratio
+            vec2 uv = (gl_FragCoord.xy * 2.0 - uResolution.xy) / uResolution.y;
+            vec2 uv0 = uv;
+            
+            vec3 finalColor = vec3(0.0);
+            
+            // --- LEVEL 0-2: NOISE & PHOSPHENES ---
+            if (level < 2.5) {
+                // Noise
+                float noise = random(uv + uTime * 0.1);
+                
+                // Phosphenes (Blobs)
+                float phos = 0.0;
+                for(float i=0.0; i<3.0; i++){
+                    uv += vec2(0.7 / (i+1.0), 0.3 / (i+1.0));
+                    float t = uTime * uSpeed * 0.5;
+                    phos += sin(uv.x * (3.0 + i) + t) * sin(uv.y * (3.0 + i) + t);
+                }
+                
+                vec3 phosColor = palette(phos * 0.2 + uTime * 0.1);
+                
+                float noiseMix = smoothstep(1.5, 0.0, level);
+                float phosMix = smoothstep(0.5, 2.0, level);
+                
+                finalColor = vec3(noise * 0.15 * noiseMix) + phosColor * phosMix * 0.5;
+            }
+            
+            // --- LEVEL 2+: FRACTAL GEOMETRY ---
+            if (level > 1.5) {
+                // Reset UV
+                uv = uv0;
+                
+                // STYLE 3: WAVY DISTORTION
+                if (uIterations >= 3.0) {
+                    uv += sin(uv.yx * 4.0 + uTime * uSpeed) * 0.05;
+                }
+                
+                // Fractal Iterations based on Level
+                float iterations = 1.0 + (level - 2.0) * 0.8;
+                
+                // Symmetry
+                float sym = uSymmetry;
+                
+                vec3 fractalColor = vec3(0.0);
+                
+                for (float i = 0.0; i < 8.0; i++) {
+                    if (i >= iterations) break;
+
+                    // Polar Fold (Kaleidoscope)
+                    float angle = atan(uv.y, uv.x);
+                    float radius = length(uv);
+                    
+                    float slice = (2.0 * PI) / sym;
+                    angle = mod(angle, slice);
+                    angle = abs(angle - slice * 0.5);
+                    
+                    uv = vec2(cos(angle), sin(angle)) * radius;
+
+                    // Space Fold
+                    uv = abs(uv) - 0.5; // Offset
+                    uv *= 1.2; // Scale
+                    
+                    // Rotate
+                    float t = uTime * uSpeed * 0.2;
+                    float s = sin(t + i*0.5);
+                    float c = cos(t + i*0.5);
+                    uv *= mat2(c, -s, s, c);
+
+                    // Accumulate
+                    float d = length(uv) * exp(-length(uv0));
+                    vec3 col = palette(length(uv0) + i*.4 + uTime*.4 * uSpeed);
+                    
+                    // Standard Glow
+                    float glow = sin(d*8. + uTime * uSpeed)/8.;
+                    glow = abs(glow);
+                    glow = pow(0.01 / glow, 1.2);
+                    
+                    // STYLE 2: LASER LINES
+                    if (uIterations >= 2.0) {
+                        float laser = 0.02 / abs(sin(d * 20.0 + uTime * 2.0));
+                        glow += laser * 0.5;
+                    }
+                    
+                    // STYLE 4: OUTLINES
+                    if (uIterations >= 4.0) {
+                        float outline = smoothstep(0.4, 0.42, sin(d * 30.0));
+                        col += vec3(outline) * 2.0;
+                    }
+                    
+                    fractalColor += col * glow;
+                }
+                
+                // Mix Fractal in
+                float fractalMix = smoothstep(1.5, 2.5, level);
+                finalColor += fractalColor * fractalMix;
+            }
+
+            gl_FragColor = vec4(finalColor, 1.0);
+        }
+    </script>
+
+    <script>
+        // --- THREE.JS SETUP ---
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        const camera = new THREE.OrthographicCamera( -1, 1, 1, -1, 0, 1 );
+        
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        renderer.setPixelRatio( Math.min(window.devicePixelRatio, 2) ); // Optimize for mobile
+        container.appendChild( renderer.domElement );
+
+        // --- UNIFORMS ---
+        const uniforms = {
+            uTime: { value: 0.0 },
+            uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+            uLevel: { value: 1.0 },
+            uSpeed: { value: 0.5 },
+            uSymmetry: { value: 6.0 },
+            uColor: { value: 0.5 },
+            uIterations: { value: 1.0 }
+        };
+
+        // --- MESH ---
+        const geometry = new THREE.PlaneGeometry( 2, 2 );
+        const material = new THREE.ShaderMaterial( {
+            uniforms: uniforms,
+            vertexShader: document.getElementById( 'vertexShader' ).textContent,
+            fragmentShader: document.getElementById( 'fragmentShader' ).textContent
+        } );
+        const plane = new THREE.Mesh( geometry, material );
+        scene.add( plane );
+
+        // --- EVENTS ---
+        window.addEventListener( 'resize', onWindowResize, false );
+
+        function onWindowResize() {
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            uniforms.uResolution.value.x = renderer.domElement.width;
+            uniforms.uResolution.value.y = renderer.domElement.height;
+        }
+
+        // --- UI LOGIC ---
+        const uiPanel = document.getElementById('ui-panel');
+        const uiToggle = document.getElementById('ui-toggle');
+        
+        uiToggle.addEventListener('click', () => {
+            uiPanel.classList.toggle('hidden');
+        });
+
+        function bindControl(id, uniformKey, displayId) {
+            const el = document.getElementById(id);
+            const disp = document.getElementById(displayId);
+            el.addEventListener('input', (e) => {
+                const val = parseFloat(e.target.value);
+                uniforms[uniformKey].value = val;
+                if (disp) disp.innerText = val.toFixed(id === 'symmetry' || id === 'iterations' ? 0 : 2);
+            });
+        }
+
+        bindControl('level', 'uLevel', 'level-val');
+        bindControl('iterations', 'uIterations', 'iter-val');
+        bindControl('speed', 'uSpeed', 'speed-val');
+        bindControl('symmetry', 'uSymmetry', 'sym-val');
+        bindControl('color', 'uColor', 'color-val');
+
+        // --- ANIMATION LOOP ---
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame( animate );
+            uniforms.uTime.value = clock.getElapsedTime();
+            renderer.render( scene, camera );
+        }
+        animate();
+
+    </script>
+</body>
+</html>
