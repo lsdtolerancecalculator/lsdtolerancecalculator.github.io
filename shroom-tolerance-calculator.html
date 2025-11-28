@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-G7SYDF3QW8');
+    </script>  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic Mushroom Tolerance Calculator | Accurate Dosage & Reset Estimates</title>
+    <meta name="description" content="Calculate your Psilocybin (Magic Mushroom) tolerance reset and estimated dosage requirements accurately. Essential psychedelic harm reduction tool.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+   
+    <!-- Schema Markup -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "SoftwareApplication",
+          "name": "Magic Mushroom Tolerance Calculator",
+          "applicationCategory": "HealthApplication",
+          "operatingSystem": "Web",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "description": "A tool to estimate Psilocybin tolerance reset and dosage requirements for harm reduction."
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What is Psilocybin?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Psilocybin is a naturally occurring psychedelic compound produced by more than 200 species of fungi (magic mushrooms). It converts to psilocin in the body, interacting with serotonin receptors."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How long does it last?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A typical trip lasts 4-6 hours. The peak usually occurs 1-2 hours after ingestion. Residual effects (afterglow) can last for another 4-8 hours."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is Tolerance?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Tolerance builds up almost immediately after ingestion. Taking the same dose the next day will have significantly reduced effects. It takes about 12-14 days for tolerance to fully reset to baseline."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is it Safe?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Physically, Psilocybin is considered non-toxic and non-addictive. However, it can be psychologically intense. 'Bad trips' can occur. Always ensure you have the correct species."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Space Mono', monospace;
+            background: linear-gradient(135deg, #E6E6FA 0%, #98FF98 50%, #89CFF0 100%);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #4a4a4a;
+            overflow-x: hidden;
+        }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            border-radius: 24px;
+        }
+        .neo-input {
+            background: rgba(255, 255, 255, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 16px;
+            color: #555;
+            transition: all 0.3s ease;
+        }
+        .neo-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.9);
+            border-color: #FFDAB9;
+            box-shadow: 0 0 15px rgba(255, 218, 185, 0.5);
+        }
+        .neo-btn {
+            background: linear-gradient(45deg, #FFDAB9, #E6E6FA);
+            border: none;
+            border-radius: 16px;
+            color: #555;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .neo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            background: linear-gradient(45deg, #E6E6FA, #FFDAB9);
+        }
+        .neo-btn:active {
+            transform: translateY(1px);
+        }
+        ::selection {
+            background: #FFDAB9;
+            color: #555;
+        }
+        .blob {
+            position: absolute;
+            filter: blur(40px);
+            z-index: -1;
+            opacity: 0.6;
+            animation: float 10s infinite ease-in-out;
+        }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(20px, -20px); }
+        }
+    </style>
+   
+</head>
+<body class="min-h-screen flex flex-col relative">
+
+    <!-- Background Blobs -->
+    <div class="blob bg-purple-300 w-64 h-64 rounded-full top-0 left-0 mix-blend-multiply"></div>
+    <div class="blob bg-yellow-200 w-64 h-64 rounded-full top-0 right-0 mix-blend-multiply animation-delay-2000"></div>
+    <div class="blob bg-pink-300 w-64 h-64 rounded-full bottom-0 left-20 mix-blend-multiply animation-delay-4000"></div>
+
+    <!-- HEADER -->
+    <header class="p-6 sticky top-0 z-50 glass-panel m-4 mb-0">
+        <div class="container mx-auto flex flex-col items-center gap-4">
+            <div class="flex items-center gap-4">
+                <img src="media/logonobg.png" alt="Logo" class="w-12 h-12 opacity-80 hover:opacity-100 transition-opacity duration-300">
+                <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-gray-700">Mushroom Tolerance Calculator</h1>
+            </div>
+            <nav class="flex flex-wrap justify-center gap-4">
+                <a href="index.html" class="neo-btn px-4 py-2 text-sm md:text-base no-underline inline-block transform hover:scale-105 transition-transform duration-200">
+                    LSD Calculator
+                </a>
+                <a href="shroom-tolerance-calculator.html" class="neo-btn px-4 py-2 text-sm md:text-base no-underline inline-block transform scale-105 border-2 border-purple-400">
+                    Mushroom Calculator
+                </a>
+                <a href="LSD-fractals-triptoy.html" class="neo-btn px-4 py-2 text-sm md:text-base no-underline inline-block transform hover:scale-105 transition-transform duration-200">
+                    Trip Toy
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto p-4 md:p-8 relative z-10">
+        
+        <div class="max-w-4xl mx-auto space-y-8">
+            <!-- INTRO -->
+            <div class="text-center glass-panel p-8">
+                <h2 class="text-3xl md:text-5xl font-bold mb-4 text-gray-700 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">Mushroom Tolerance</h2>
+                <p class="text-lg md:text-xl text-gray-600">Estimate your Psilocybin tolerance reset. Respect the fungi.</p>
+            </div>
+
+            <!-- CALCULATOR FORM -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- INPUTS -->
+                <div class="glass-panel p-8">
+                    <div class="mb-6">
+                        <label class="block text-lg font-bold mb-2 text-gray-600">Last Dose (g)</label>
+                        <input type="number" id="lastdose" class="w-full p-4 text-xl neo-input" placeholder="3.5" step="0.1">
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-lg font-bold mb-2 text-gray-600">Desired Dose (g)</label>
+                        <input type="number" id="desiredose" class="w-full p-4 text-xl neo-input" placeholder="3.5" step="0.1">
+                    </div>
+
+                    <div class="mb-8">
+                        <label class="block text-lg font-bold mb-2 text-gray-600">Time Since Last Dose</label>
+                        <div class="flex gap-4">
+                            <div class="w-1/2">
+                                <input type="number" id="daysince" class="w-full p-4 text-xl neo-input" placeholder="Days (0-5)" min="0">
+                                <span class="text-xs text-gray-500 ml-1">Days</span>
+                            </div>
+                            <div class="w-1/2">
+                                <input type="number" id="hourssince" class="w-full p-4 text-xl neo-input" placeholder="Hours (0-23)" min="0" max="23">
+                                <span class="text-xs text-gray-500 ml-1">Hours</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-8">
+                        <label class="block text-lg font-bold mb-2 text-gray-600">Consecutive Days Dosing</label>
+                        <input type="number" id="consecutivedays" class="w-full p-4 text-xl neo-input" placeholder="1 (Single Dose)" min="1" value="1">
+                        <p class="text-xs text-gray-500 mt-1">Enter 1 if you only dosed once.</p>
+                    </div>
+
+                    <button onclick="calculate()" class="w-full py-4 text-xl neo-btn uppercase tracking-wider">
+                        Calculate
+                    </button>
+                </div>
+
+                <!-- RESULTS -->
+                <div class="glass-panel p-8 flex flex-col justify-center relative overflow-hidden bg-white/30">
+                    <h3 class="text-2xl font-bold mb-6 text-gray-700 border-b-2 border-white/50 pb-2">Results</h3>
+                    
+                    <div id="results-container" class="hidden space-y-6">
+                        <div>
+                            <h4 class="text-gray-600 text-lg font-bold">Effectiveness of Desired Dose</h4>
+                            <p id="result-effectiveness" class="text-xl md:text-2xl font-bold text-gray-800 mt-2"></p>
+                        </div>
+                        
+                        <div class="border-t-2 border-dashed border-white/50 pt-4">
+                            <h4 class="text-gray-600 text-lg font-bold">Dose Needed for Desired Effect</h4>
+                            <p id="result-needed" class="text-3xl md:text-4xl font-bold text-purple-500 mt-2"></p>
+                        </div>
+                    </div>
+
+                    <div id="placeholder-text" class="text-center text-gray-500 italic">
+                        Enter data to reveal insights...
+                    </div>
+                </div>
+            </div>
+
+            <!-- INFO SECTION -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="glass-panel p-8">
+                    <h3 class="text-2xl font-bold mb-4 text-blue-400">How it Works</h3>
+                    <p class="mb-4 text-sm text-gray-600">Based on a 5-day tolerance reset cycle. Physiology varies. Use with caution.</p>
+                    <p class="text-sm text-gray-600">Assumes standard dried Psilocybe cubensis mushrooms. Potency varies by strain and batch.</p>
+                </div>
+
+                <div class="glass-panel p-8">
+                    <h3 class="text-2xl font-bold mb-4 text-pink-400">Safety First</h3>
+                    <p class="mb-4 text-sm text-gray-600">Set and setting are crucial. Ensure you are in a safe environment.</p>
+                    <p class="text-sm text-gray-600">Wait 1-2 weeks for full integration.</p>
+                </div>
+            </div>
+            
+            <!-- FAQ SECTION -->
+            <div class="glass-panel p-8">
+                <h3 class="text-3xl font-bold mb-8 text-center text-gray-700">Mushroom FAQ</h3>
+                
+                <div class="space-y-6">
+                    <div class="bg-white/40 p-6 rounded-2xl">
+                        <h4 class="text-xl font-bold text-purple-500 mb-2">What is Psilocybin?</h4>
+                        <p class="text-gray-600">Psilocybin is a naturally occurring psychedelic compound produced by more than 200 species of fungi (magic mushrooms). It converts to psilocin in the body, interacting with serotonin receptors.</p>
+                    </div>
+
+                    <div class="bg-white/40 p-6 rounded-2xl">
+                        <h4 class="text-xl font-bold text-green-500 mb-2">How long does it last?</h4>
+                        <p class="text-gray-600">A typical trip lasts 4-6 hours. The peak usually occurs 1-2 hours after ingestion. Residual effects (afterglow) can last for another 4-8 hours.</p>
+                    </div>
+
+                    <div class="bg-white/40 p-6 rounded-2xl">
+                        <h4 class="text-xl font-bold text-blue-400 mb-2">What is Tolerance?</h4>
+                        <p class="text-gray-600">Tolerance builds up almost immediately after ingestion. Taking the same dose the next day will have significantly reduced effects. It takes about 5-7 days for tolerance to fully reset to baseline.</p>
+                    </div>
+                    
+                    <div class="bg-white/40 p-6 rounded-2xl">
+                        <h4 class="text-xl font-bold text-pink-400 mb-2">Set & Setting?</h4>
+                        <p class="text-gray-600">Crucial for a good experience. <strong class="text-purple-500">Set</strong> refers to your mindset. <strong class="text-purple-500">Setting</strong> refers to your environment. Optimize both for safety and enjoyment.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="glass-panel m-4 p-6 text-center mt-12">
+        <p class="text-sm text-gray-500">© 2025 Mushroom Tolerance Calculator | Harm Reduction | <a href="privacy.html" class="hover:text-purple-500 transition-colors">Privacy Policy</a></p>
+    </footer>
+
+    <script src="assets/shroom.js"></script>
+    <script src="assets/cookie-banner.js"></script>
+</body>
+</html>
